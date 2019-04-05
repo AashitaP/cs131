@@ -1,0 +1,59 @@
+After Action Report - 
+
+Assessment of make_parser vs make_matcher:
+
+I wrote make_parser in terms of make_matcher as it made the most intuitive sens
+e to me as make_parser is essentially make_matcher with an empty_suffix accepto
+r but instead of returning an empty suffix it returns a parse tree. In make_par
+ser's first part, I used the same function and added a variable that tracks the
+ rules used in the derivation and created an acceptor that accepts the derivati
+on and empty suffix and returns the derivation which in the second part is used
+ to create a parse tree. 
+ 
+There is some duplication here as instead of reusing the same function, I creat
+ed another function and added the variable as I was not able to find a way to c
+ombine both into a single function without resulting in type errors as make_mat
+cher returns a matcher that is applied to a fragment and acceptor but make_pars
+er returns a parser that is only applied to a fragment. The second part of make
+ parser is completely independent of make_matcher and essentially does what par
+se_tree_leaves does in reverse (and in a totally different manner). 
+
+It is probably possible to build a parse tree and check if one exists within th
+e same function as we are already building the derivation in the first function
+ and that uses the same recursion logic but the construction of that seemed sig
+nificantly more complicated to me and hence I decided to base the first functio
+n off make_matcher and build a separate function to construct the tree. I do no
+t think the approach I used had any significant negative impact on the efficien
+cy of the program. 
+
+
+Assessment of weaknesses:
+
+There are a couple of weaknesses I can think of in the context of its intended 
+application. The code does not check for useless grammar for example if the rul
+e leads to itself (for example A -> A) or continually expands (for example A ->
+ aA), the following program does not throw an error and would instead recurse i
+nfinitely until the program is stopped from running. Another case is if the rul
+e is empty (for example A -> []), while this will not lead to infinite recursio
+n, the program does not filter it out. 
+
+Additionally, the make_parser program results in a warning as the pattern for m
+ake parse tree is non exhaustive as it does not match an empty derivation list.
+As this case will never happen as it will be resolved in the main function that
+ calls make parse tree, I was not sure how to resolve the warning.
+
+
+Other thoughts: 
+
+I did not use any list modules in my program. 
+I considered using parse_tree_leaves in the implementation of make_parser where
+I would call parse_tree_leaves on the entire tree and then check if the corresp
+onding fragment is a subset of the generated leaves and then build a tree. Howe
+ver using make_matcher seemed more intuitive and efficient as we were building 
+it as part of the assignment anyway and it could be used to build the derivatio
+n unlike parse_tree leaves. 
+Given the recursive & backtracking nature of the program, longer fragments take
+noticeably longer so it is possible that this program will not be usable for ve
+ry long fragments for e.g. entire books. 
+
+
