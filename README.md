@@ -1,4 +1,4 @@
 # cs131
 My homework solutions for COM SCI 131 UCLA
 
-copy at your own risk
+Not responsible for any plagarism, refer at your own risk
